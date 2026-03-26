@@ -16,12 +16,14 @@ def get_voice_input():
     except:
         return "Sorry, could not understand audio"
 
-import geocoder
+import requests
 
 def get_location():
-    g = geocoder.ip('me')
+    url = "https://ipinfo.io/json"
+    response = requests.get(url)
+    data = response.json()
 
-    city = g.city
-    latlng = g.latlng
+    city = data.get("city")
+    loc = data.get("loc")  # gives lat,long
 
-    return city, latlng
+    return city, loc

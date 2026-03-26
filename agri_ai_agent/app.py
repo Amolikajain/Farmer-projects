@@ -82,27 +82,42 @@ Give clear farming advice in simple steps.
 # ---------------- STREAMLIT UI ----------------
 
 st.title("🌾 Smart AI Farming Assistant")
-
 st.write("Ask farming questions based on your local conditions.")
+
+# -------- LOCATION --------
+
+city = None
+
+if st.button("📍 Detect My Location"):
+    city, coords = get_location()
+    st.success(f"Detected Location: {city}")
+
+if not city:
+    city = st.selectbox(
+        "Or select your city manually",
+        ["Bhopal", "Nashik", "Navi Mumbai"]
+    )
 
 # -------- QUESTION INPUT --------
 
-question = st.text_input("Enter your farming question")
+question = st.text_input("Enter your farming question", key="question_input")
+
+# -------- VOICE INPUT --------
 
 if st.button("🎤 Speak"):
     question = get_voice_input()
     st.write("You said:", question)
 
-# -------- LOCATION --------
+    if question:
+        weather = get_weather(city)
 
-if st.button("📍 Detect My Location"):
-    city, coords = get_location()
-    st.write(f"Detected Location: {city}")
-else:
-    city = st.selectbox(
-        "Or select your city manually",
-        ["Bhopal", "Nashik", "Navi Mumbai"]
-    )
+        soil = mock_agri_data[city]["soil"]
+        market = mock_agri_data[city]["price_trend"]
+
+        answer = generate_ai_response(question, city, weather, soil, market)
+
+        st.subheader("🌱 AI Recommendations")
+        st.write(answer)
 
 # -------- MAIN BUTTON --------
 
