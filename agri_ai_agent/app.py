@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import google.generativeai as genai
+from voice_location import get_voice_input, get_location
 
 # ---------------- API KEYS ----------------
 
@@ -91,10 +92,18 @@ st.write("Ask farming questions based on your local conditions.")
 
 question = st.text_input("Enter your farming question")
 
-city = st.selectbox(
-    "Select your city",
-    ["Bhopal", "Nashik", "Navi Mumbai"]
-)
+if st.button("🎤 Speak"):
+    question = get_voice_input()
+    st.write("You said:", question)
+
+if st.button("📍 Detect My Location"):
+    city, coords = get_location()
+    st.write(f"Detected Location: {city}")
+else:
+    city = st.selectbox(
+        "Or select your city manually",
+        ["Bhopal", "Nashik", "Navi Mumbai"]
+    )
 
 if st.button("Get AI Advice"):
 
