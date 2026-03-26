@@ -105,6 +105,6 @@ if st.button("Get AI Advice"):
 
     answer = generate_ai_response(question, city, weather, soil, market)
 
-    st.subheader("🌱 AI Recommendation")
+    st.subheader("🌱 AI Recommendations")
 
     st.write(answer)
