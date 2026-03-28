@@ -3,7 +3,7 @@ services:
     name: farming-assistant-api
     env: python
     plan: free
-    buildCommand: pip install -r agri_ai_agent/requirements.txt
+    buildCommand: pip install -r requirements.txt
     startCommand: cd agri_ai_agent && uvicorn backend:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: GEMINI_API_KEY
