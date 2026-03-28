@@ -222,6 +222,3 @@ def approve_plan(farmer_id: str = Body(...), planner: list[PlannerStep] = Body(.
     # In production, schedule reminders (e.g., via Celery, cron, or push notifications)
     return JSONResponse({"status": "approved", "message": "Plan saved and reminders scheduled."})
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
