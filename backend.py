@@ -60,9 +60,15 @@ def get_market_price(city, crop=None):
         return "Market price data not available"
 
 def get_soil_and_market_by_coords(lat, lon, crop=None):
-    # TODO: Replace with real data source or API
-    results = rg.search((lat, lon))
-    city = results[0]['name'] if results else "Unknown"
+    # Debug: Log coordinates
+    print(f"[DEBUG] Looking up city for coordinates: lat={lat}, lon={lon}")
+    try:
+        results = rg.search((lat, lon))
+        print(f"[DEBUG] reverse_geocoder results: {results}")
+        city = results[0]['name'] if results else "Unknown"
+    except Exception as e:
+        print(f"[ERROR] reverse_geocoder failed: {e}")
+        city = "Unknown"
     # Dummy logic for soil (replace with real lookup)
     if city == "Bhopal":
         soil = "Medium Black Soil"
@@ -72,7 +78,13 @@ def get_soil_and_market_by_coords(lat, lon, crop=None):
         soil = "Laterite Soil"
     else:
         soil = "Unknown"
+    # Fallback: If city is unknown, use a default city to avoid downstream errors
+    if city == "Unknown":
+        print("[WARN] City could not be determined from coordinates. Using fallback city 'Bhopal'.")
+        city = "Bhopal"
+        soil = "Medium Black Soil"
     market = get_market_price(city, crop)
+    print(f"[DEBUG] Using city: {city}, soil: {soil}, market: {market}")
     return city, soil, market
 
 # ============ MODELS ============
