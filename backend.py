@@ -177,6 +177,7 @@ def health_check():
     return {"status": "healthy"}
 
 @app.post("/get-advice", tags=["Recommendations"], response_model=AdviceResponse)
+def get_farming_advice(request: AdviceRequest):
     if not request.question or len(request.question.strip()) == 0:
         raise HTTPException(status_code=400, detail="Question cannot be empty")
     if request.latitude is None or request.longitude is None:
