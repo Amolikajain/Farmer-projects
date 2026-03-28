@@ -1,8 +1,10 @@
+
 import streamlit as st
 import requests
 import google.generativeai as genai
 import os
 from voice_location import get_voice_input, get_location
+from soil_api import get_soil_ph
 
 # ---------------- API KEYS ----------------
 GEMINI_API_KEY="AIzaSyBY01ivz-q-aIpUXyp1Md9h-zSqWKV7aD8"
@@ -98,6 +100,10 @@ Give clear farming advice in simple steps.
 # ---------------- STREAMLIT UI ----------------
 
 st.title("🌾 Smart AI Farming Assistant")
+
+lat, lon = get_location()
+
+soil_ph = get_soil_ph(lat, lon)
 st.write("Ask farming questions based on your local conditions.")
 
 # -------- LOCATION --------
