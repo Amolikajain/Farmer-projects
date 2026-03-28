@@ -5,7 +5,8 @@ import os
 from voice_location import get_voice_input, get_location
 
 # ---------------- API KEYS ----------------
-
+GEMINI_API_KEY="AIzaSyBY01ivz-q-aIpUXyp1Md9h-zSqWKV7aD8"
+WEATHER_API_KEY="7b74386e671b790fcc97a070ee8e987e"
 
 # ---------------- GEMINI SETUP ----------------
 
