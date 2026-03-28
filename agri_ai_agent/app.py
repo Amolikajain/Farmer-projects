@@ -6,8 +6,8 @@ from voice_location import get_voice_input, get_location
 
 # ---------------- API KEYS ----------------
 
-GEMINI_API_KEY = "AIzaSyCeZOo82SK1KOlWubbFv3KhgootRkSFkJw"
-WEATHER_API_KEY = "7b74386e671b790fcc97a070ee8e987e"
+GEMINI_API_KEY = "AIzaSyC2XBragMKwKfK8yMBFYadEsKwR_EMHY78"
+WEATHER_API_KEY = "b898b54a25487a86734efde5a7c63da0"
 
 # ---------------- GEMINI SETUP ----------------
 
@@ -40,14 +40,31 @@ mock_agri_data = {
 def get_weather(city):
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={WEATHER_API_KEY}&units=metric"
 
-    response = requests.get(url)
-    data = response.json()
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an error for bad status codes
+        data = response.json()
 
-    temperature = data["main"]["temp"]
-    humidity = data["main"]["humidity"]
-    description = data["weather"][0]["description"]
+        # Check if the response contains required keys
+        if "main" not in data or "weather" not in data:
+            st.error(f"Invalid response from weather API for city: {city}")
+            return None, None, None
 
-    return temperature, humidity, description
+        temperature = data["main"]["temp"]
+        humidity = data["main"]["humidity"]
+        description = data["weather"][0]["description"]
+
+        return temperature, humidity, description
+    
+    except requests.exceptions.HTTPError as e:
+        st.error(f"Weather API error: {e.response.status_code} - {e.response.json().get('message', 'Unknown error')}")
+        return None, None, None
+    except requests.exceptions.RequestException as e:
+        st.error(f"Network error while fetching weather: {str(e)}")
+        return None, None, None
+    except (KeyError, IndexError) as e:
+        st.error(f"Error parsing weather data: {str(e)}")
+        return None, None, None
 
 # ---------------- AI RESPONSE ----------------
 
@@ -111,13 +128,16 @@ if st.button("🎤 Speak"):
     if question:
         weather = get_weather(city)
 
-        soil = mock_agri_data[city]["soil"]
-        market = mock_agri_data[city]["price_trend"]
+        if weather[0] is not None:
+            soil = mock_agri_data[city]["soil"]
+            market = mock_agri_data[city]["price_trend"]
 
-        answer = generate_ai_response(question, city, weather, soil, market)
+            answer = generate_ai_response(question, city, weather, soil, market)
 
-        st.subheader("🌱 AI Recommendations")
-        st.write(answer)
+            st.subheader("🌱 AI Recommendations")
+            st.write(answer)
+        else:
+            st.error("Unable to fetch weather data. Please check the city name or try again.")
 
 # -------- MAIN BUTTON --------
 
@@ -128,10 +148,13 @@ if st.button("Get AI Advice"):
     else:
         weather = get_weather(city)
 
-        soil = mock_agri_data[city]["soil"]
-        market = mock_agri_data[city]["price_trend"]
+        if weather[0] is not None:
+            soil = mock_agri_data[city]["soil"]
+            market = mock_agri_data[city]["price_trend"]
 
-        answer = generate_ai_response(question, city, weather, soil, market)
+            answer = generate_ai_response(question, city, weather, soil, market)
 
-        st.subheader("🌱 AI Recommendations")
-        st.write(answer)
+            st.subheader("🌱 AI Recommendations")
+            st.write(answer)
+        else:
+            st.error("Unable to fetch weather data. Please check the city name or try again.")

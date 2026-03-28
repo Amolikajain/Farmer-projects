@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: farming-assistant-api
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: GEMINI_API_KEY
+        value: AIzaSyC2XBragMKwKfK8yMBFYadEsKwR_EMHY78
+      - key: WEATHER_API_KEY
+        value: b898b54a25487a86734efde5a7c63da0
