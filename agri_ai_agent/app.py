@@ -6,8 +6,6 @@ from voice_location import get_voice_input, get_location
 
 # ---------------- API KEYS ----------------
 
-GEMINI_API_KEY = "AIzaSyC2XBragMKwKfK8yMBFYadEsKwR_EMHY78"
-WEATHER_API_KEY = "b898b54a25487a86734efde5a7c63da0"
 
 # ---------------- GEMINI SETUP ----------------
 
